@@ -90,7 +90,8 @@
         { name: "蕉牌無敵日", cost: 20 }
     ];
 
-    let stamps = parseInt(localStorage.getItem('stamps')) || 0;
+let stamps = parseInt(localStorage.getItem('stamps')) || 0;
+let hasOpenedForm = false; // 用嚟記錄佢係咪開咗 Google Form
 
     function init() {
         document.getElementById('currentDate').innerText = "今天是：" + new Date().toLocaleDateString();
@@ -113,18 +114,36 @@
     }
 
     function addStamp() {
-        if (stamps < 20) {
-            stamps++;
-            renderStamps();
-            renderRewards();
-            setTimeout(() => {
-                alert("耀耀～依家幫你打開 Google Form 寫低我哋嘅回憶，一陣自嘲熊就會幫你印上印花❤️");
-                window.open(googleFormUrl, '_blank'); 
-            }, 100);
-        } else {
-            alert("印花已經滿咗啦！快啲搵蕉換獎勵啦～");
-        }
+    if (stamps >= 20) {
+        alert("印花已經滿咗啦！");
+        return;
     }
+
+    const btn = document.querySelector('.btn-add'); // 搵返個「領取」按鈕
+
+    if (!hasOpenedForm) {
+        // --- 流程 A：佢未撳過開 Form ---
+        alert("耀耀～依家幫你打開 Google Form 寫低我哋嘅回憶，一陣自嘲熊就會幫你印上印花❤️");
+        window.open(googleFormUrl, '_blank');
+        hasOpenedForm = true; // 標記為已經開咗 Form
+        
+        // 變更按鈕文字同顏色，提示佢返嚟再撳
+        btn.innerHTML = "✅ 係咪填好左啦，自嘲熊俾印花你";
+        btn.style.background = "#4CAF50"; 
+    } else {
+        // --- 流程 B：佢已經開咗 Form，依家係第二次撳 ---
+        stamps++;
+        renderStamps();
+        renderRewards();
+        
+        alert("蓋咗印花啦🐥下次記得再嚟呀！");
+        
+        // 領完之後，將按鈕變返原本個樣
+        hasOpenedForm = false; 
+        btn.innerHTML = "＋ 領取一個印花";
+        btn.style.background = "#ff6b6b";
+    }
+}
 
     function renderRewards() {
         const list = document.getElementById('rewardList');
