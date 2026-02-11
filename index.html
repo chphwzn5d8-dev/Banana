@@ -157,7 +157,7 @@
         }
     }
 
-    function renderRewards() {
+        function renderRewards() {
         const list = document.getElementById('rewardList');
         list.innerHTML = '';
         rewards.forEach(item => {
@@ -176,7 +176,9 @@
 
     function redeem(name, cost) {
         if (confirm(`確定兌換「${name}」？將扣除 ${cost} 個印花。`)) {
-            playUra(); // 播放 URAAA!!
+            // 播放音效
+            let sound = new Audio('https://files.catbox.moe/5n4y5p.mp3');
+            sound.play().catch(e => console.log("音訊播放失敗"));
             
             // 噴公仔特效
             const scalar = 2;
@@ -185,15 +187,19 @@
             const u = confetti.shapeFromText({ text: '🐥', scalar });
             confetti({ shapes: [b, h, u], particleCount: 50, spread: 70, origin: { y: 0.6 }, scalar });
 
+            // 扣除印花並更新畫面
             stamps -= cost;
             renderStamps();
             renderRewards();
+            localStorage.setItem('stamps', stamps); // 儲存印花數量
+            
+            // 彈出成功句子
             alert(`兌換成功！🎉\n記得影低搵蕉蕉領取：${name}`);
         }
     }
 
     function toggleModal(show) { document.getElementById('rewardModal').style.display = show ? 'flex' : 'none'; }
-    init();
+    init(); 
 </script>
 </body>
 </html>
