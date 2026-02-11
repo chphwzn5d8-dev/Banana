@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>❤️ 蕉牌專屬印花任務</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         * { box-sizing: border-box; }
         html, body { 
@@ -60,8 +61,9 @@
     <div id="currentDate" style="font-size: 12px; color: #999; margin-bottom: 10px;"></div>
     <div class="score-info">目前擁有印花：<span id="stampCount">0</span> / 20</div>
     <div class="stamp-grid" id="stampGrid"></div>
-    <div class="mission-box">
-        <strong>儲印花方法：</strong> 點擊「領取印花」寫下一件事。藍毛毛會幫你記錄我們的回憶喔！
+<div class="mission-box" id="missionText">
+        <strong>儲印花方法：</strong>
+        點擊「領取印花」寫下一件事。藍毛毛會幫你記錄我們的回憶喔！
     </div>
     <div class="btn-group">
         <button class="btn btn-add" onclick="addStamp()">＋ 領取一個印花</button>
@@ -69,6 +71,8 @@
     </div>
 </div>
 
+
+    
 <div class="modal" id="rewardModal">
     <div class="modal-content">
         <h3 style="margin: 0 0 15px 0; color: #ff6b6b;">✨ 蕉牌獎勵清單</h3>
@@ -81,17 +85,17 @@
     const googleFormUrl = "https://forms.gle/rC1UqySGsSZdCQPK6"; 
     const stampImg = "https://nagano-market.jp/cdn/shop/files/gifani_guide_thanx_250x.gif?v=3654521447782237687";
     const rewards = [
-        { name: "蕉牌哈哈哈", cost: 1 },
-        { name: "蕉牌運動日", cost: 3 },
-        { name: "蕉牌按摩", cost: 5 },
-        { name: "蕉牌小食", cost: 5 },
-        { name: "蕉牌深層按摩", cost: 10 },
-        { name: "蕉牌神神秘秘", cost: 15 },
-        { name: "蕉牌無敵日", cost: 20 }
-    ];
+    { name: "蕉牌哈哈哈", cost: 1 },
+    { name: "蕉牌運動日", cost: 3 },
+    { name: "蕉牌按摩", cost: 5 },
+    { name: "蕉牌小食", cost: 5 },
+    { name: "蕉牌深層按摩", cost: 10 },
+    { name: "蕉牌神神秘秘", cost: 15 },
+    { name: "蕉牌無敵日", cost: 20 }
+];
 
-let stamps = parseInt(localStorage.getItem('stamps')) || 0;
-let hasOpenedForm = false; // 用嚟記錄佢係咪開咗 Google Form
+    let stamps = parseInt(localStorage.getItem('stamps')) || 0;
+    let hasOpenedForm = false;
 
     function init() {
         document.getElementById('currentDate').innerText = "今天是：" + new Date().toLocaleDateString();
@@ -101,7 +105,6 @@ let hasOpenedForm = false; // 用嚟記錄佢係咪開咗 Google Form
 
     function renderStamps() {
         const grid = document.getElementById('stampGrid');
-        if(!grid) return;
         grid.innerHTML = '';
         for (let i = 1; i <= 20; i++) {
             const slot = document.createElement('div');
@@ -110,58 +113,40 @@ let hasOpenedForm = false; // 用嚟記錄佢係咪開咗 Google Form
             grid.appendChild(slot);
         }
         document.getElementById('stampCount').innerText = stamps;
+        
+        const missionBox = document.getElementById('missionText');
+        if (stamps < 20) {
+            missionBox.innerHTML = `<strong>加油！</strong> 距離換領大獎仲差 <strong>${20 - stamps}</strong> 個印花！撳「領取」去填任務。`;
+        } else {
+            missionBox.innerHTML = `<strong>太棒了！</strong> 印花已經滿晒喇，快啲去兌換大獎啦！`;
+        }
         localStorage.setItem('stamps', stamps);
     }
 
     function addStamp() {
-    if (stamps >= 20) {
-        alert("印花已經滿咗啦！");
-        return;
-    }
-
-    const btn = document.querySelector('.btn-add'); // 搵返個「領取」按鈕
-
-    if (!hasOpenedForm) {
-        // --- 流程 A：佢未撳過開 Form ---
-        alert("耀耀～依家幫你打開 Google Form 寫低我哋嘅回憶，一陣自嘲熊就會幫你印上印花❤️");
-        window.open(googleFormUrl, '_blank');
-        hasOpenedForm = true; // 標記為已經開咗 Form
-        
-        // 變更按鈕文字同顏色，提示佢返嚟再撳
-        btn.innerHTML = "✅ 係咪填好左啦，自嘲熊俾印花你";
-        btn.style.background = "#4CAF50"; 
-    } else {
-        // --- 流程 B：佢已經開咗 Form，依家係第二次撳 ---
-
-    
+        if (stamps >= 20) { alert("印花已經滿咗啦！"); return; }
+        const btn = document.querySelector('.btn-add');
+        if (!hasOpenedForm) {
+            alert("耀耀～依家幫你打開 Google Form 寫低我哋嘅回憶，一陣自嘲熊就會幫你印上印花❤️～");
+            window.open(googleFormUrl, '_blank');
+            hasOpenedForm = true;
+            btn.innerHTML = "✅ 係咪填好左，自嘲熊努力幫你蓋緊印花";
+            btn.style.background = "#4CAF50"; 
         } else {
-            // 第二步：正式加印花
-            
-            // 🎵 插入烏薩奇 YAH!! 聲
-            var audio = new Audio('https://files.catbox.moe/p9o7d4.mp3'); 
-            audio.play();
-
-
-        stamps++;
-        renderStamps();
-        // ...
-
-        stamps++;
-        renderStamps();
-        renderRewards();
-        
-        alert("蓋咗印花啦🐥下次記得再嚟呀！");
-        
-        // 領完之後，將按鈕變返原本個樣
-        hasOpenedForm = false; 
-        btn.innerHTML = "＋ 領取一個印花";
-        btn.style.background = "#ff6b6b";
+            // 🎵 烏薩奇 YAH!! 聲
+            new Audio('https://files.catbox.moe/p9o7d4.mp3').play();
+            stamps++;
+            renderStamps();
+            renderRewards();
+            alert("蓋左印花💛下次再嚟記錄啦！");
+            hasOpenedForm = false;
+            btn.innerHTML = "＋ 領取一個印花";
+            btn.style.background = "#ff6b6b";
+        }
     }
-}
 
     function renderRewards() {
         const list = document.getElementById('rewardList');
-        if(!list) return;
         list.innerHTML = '';
         rewards.forEach(item => {
             const div = document.createElement('div');
@@ -169,35 +154,36 @@ let hasOpenedForm = false; // 用嚟記錄佢係咪開咗 Google Form
             div.innerHTML = `
                 <div style="text-align:left">
                     <div style="font-weight:bold">${item.name}</div>
-                    <div style="font-size:11px; color:#888">消耗 ${item.cost} 個印花</div>
+                    <div style="font-size:11px; color:#888">${item.desc} (${item.cost}枚)</div>
                 </div>
-                <button class="redeem-btn" ${stamps < item.cost ? 'disabled' : ''} onclick="redeem('${item.name}', ${item.cost})">
-                    ${stamps < item.cost ? '不夠' : '兌換'}
-                </button>
+                <button class="redeem-btn" ${stamps < item.cost ? 'disabled style="background:#ddd"' : ''} onclick="redeem('${item.name}', ${item.cost})">兌換</button>
             `;
             list.appendChild(div);
         });
     }
 
     function redeem(name, cost) {
-        if (confirm(`確定兌換「${name}」？將扣除 ${cost} 個印花。`)) 
-        
-    }
-        
-            // 🎵 插入烏薩奇 URAAA!! 聲
-            var audioRedeem = new Audio('https://files.catbox.moe/5n4y5p.mp3');
-            audioRedeem.play();
+        if (confirm(`確定兌換「${name}」？將扣除 ${cost} 個印花。`)) {
+            // 🎵 烏薩奇 URAAA!! 聲
+            new Audio('https://files.catbox.moe/5n4y5p.mp3').play();
+            
+            // 🍌 噴出公仔！
+            const scalar = 2;
+            const b = confetti.shapeFromText({ text: '🍌', scalar });
+            const h = confetti.shapeFromText({ text: '💛', scalar });
+            const u = confetti.shapeFromText({ text: '🐥', scalar });
+            confetti({ shapes: [b, h, u], particleCount: 50, spread: 70, origin: { y: 0.6 }, scalar });
 
             stamps -= cost;
             renderStamps();
             renderRewards();
-            alert(`兌換成功！!!記得影低搵蕉蕉領取：${name}`);
+            alert(`兌換成功！🎉\n記得影低搵蕉蕉領取：${name}`);
         }
     }
 
     function toggleModal(show) { document.getElementById('rewardModal').style.display = show ? 'flex' : 'none'; }
-    
-    init();
+init(); // 確保這行在最後，負責啟動整個網頁
 </script>
 </body>
 </html>
+
