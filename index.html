@@ -84,15 +84,16 @@
 <script>
     const googleFormUrl = "https://forms.gle/rC1UqySGsSZdCQPK6"; 
     const stampImg = "https://nagano-market.jp/cdn/shop/files/gifani_guide_thanx_250x.gif?v=3654521447782237687";
-    const rewards = [
-    { name: "蕉牌哈哈哈", cost: 1 },
-    { name: "蕉牌運動日", cost: 3 },
-    { name: "蕉牌按摩", cost: 5 },
-    { name: "蕉牌小食", cost: 5 },
-    { name: "蕉牌深層按摩", cost: 10 },
-    { name: "蕉牌神神秘秘", cost: 15 },
-    { name: "蕉牌無敵日", cost: 20 }
-];
+        const rewards = [
+        { name: "蕉牌哈哈哈", cost: 1, desc: "聽店主講笑話" },
+        { name: "蕉牌運動日", cost: 3, desc: "陪店主做運動" },
+        { name: "蕉牌按摩", cost: 5, desc: "店主親自按摩" },
+        { name: "蕉牌小食", cost: 5, desc: "驚喜小食一份" },
+        { name: "蕉牌深層按摩", cost: 10, desc: "豪華放鬆按摩" },
+        { name: "蕉牌神神秘秘", cost: 15, desc: "神祕獎勵揭曉" },
+        { name: "蕉牌無敵日", cost: 20, desc: "今日聽晒你話" }
+    ];
+
 
     let stamps = parseInt(localStorage.getItem('stamps')) || 0;
     let hasOpenedForm = false;
@@ -153,8 +154,9 @@
             div.className = 'reward-item';
             div.innerHTML = `
                 <div style="text-align:left">
-                    <div style="font-weight:bold">${item.name}</div>
-                    <div style="font-size:11px; color:#888">${item.desc} (${item.cost}枚)</div>
+                    <div style="font-weight:bold">${item.name}
+                    <div style="font-size:11px; color:#888">消耗 ${item.cost} 枚印花</div>
+
                 </div>
                 <button class="redeem-btn" ${stamps < item.cost ? 'disabled style="background:#ddd"' : ''} onclick="redeem('${item.name}', ${item.cost})">兌換</button>
             `;
@@ -177,7 +179,7 @@
             stamps -= cost;
             renderStamps();
             renderRewards();
-            alert(`兌換成功！🎉\n記得影低搵蕉蕉領取：${name}`);
+            alert(`兌換成功！🎉\n記得影低搵蕉蕉領取：${name}`
         }
     }
 
