@@ -82,29 +82,14 @@
 <script>
     const googleFormUrl = "https://forms.gle/rC1UqySGsSZdCQPK6"; 
     const stampImg = "https://nagano-market.jp/cdn/shop/files/gifani_guide_thanx_250x.gif?v=3654521447782237687";
-    
-    // 預載音效 (更換穩定連結)
-    const audioYah = new Audio('https://raw.githubusercontent.com/chphwzn5d8-dev/Banana/main/yah.mp3'); // 建議將mp3放入GitHub
-    const audioUra = new Audio('https://raw.githubusercontent.com/chphwzn5d8-dev/Banana/main/ura.mp3'); 
-
-    // 如果你還沒上傳 mp3 到 GitHub，暫時沿用備用網址，但加上錯誤處理
-    const playYah = () => {
-        let sound = new Audio('https://files.catbox.moe/p9o7d4.mp3');
-        sound.play().catch(e => console.log("音訊播放失敗，可能需要先點擊頁面"));
-    };
-    const playUra = () => {
-        let sound = new Audio('https://files.catbox.moe/5n4y5p.mp3');
-        sound.play().catch(e => console.log("音訊播放失敗"));
-    };
-
     const rewards = [
-        { name: "蕉牌哈哈哈", cost: 1, desc: "消耗 1 枚印花" },
-        { name: "蕉牌運動日", cost: 3, desc: "消耗 3 枚印花" },
-        { name: "蕉牌按摩", cost: 5, desc: "消耗 5 枚印花" },
-        { name: "蕉牌小食", cost: 5, desc: "消耗 5 枚印花" },
-        { name: "蕉牌深層按摩", cost: 10, desc: "消耗 10 枚印花" },
-        { name: "蕉牌神神秘秘", cost: 15, desc: "消耗 15 枚印花" },
-        { name: "蕉牌無敵日", cost: 20, desc: "消耗 20 枚印花" }
+        { name: "蕉牌哈哈哈", cost: 1, desc: "聽店主講笑話" },
+        { name: "蕉牌運動日", cost: 3, desc: "陪店主做運動" },
+        { name: "蕉牌按摩", cost: 5, desc: "店主親自按摩" },
+        { name: "蕉牌小食", cost: 5, desc: "驚喜小食一份" },
+        { name: "蕉牌深層按摩", cost: 10, desc: "豪華放鬆按摩" },
+        { name: "蕉牌神神秘秘", cost: 15, desc: "驚喜大獎" },
+        { name: "蕉牌無敵日", cost: 20, desc: "今天你最大" }
     ];
 
     let stamps = parseInt(localStorage.getItem('stamps')) || 0;
@@ -146,7 +131,7 @@
             btn.innerHTML = "✅ 係咪填好左，自嘲熊努力幫你蓋緊印花";
             btn.style.background = "#4CAF50"; 
         } else {
-            playYah(); // 播放 YAH!!
+            new Audio('https://files.catbox.moe/p9o7d4.mp3').play().catch(() => {});
             stamps++;
             renderStamps();
             renderRewards();
@@ -157,7 +142,7 @@
         }
     }
 
-        function renderRewards() {
+    function renderRewards() {
         const list = document.getElementById('rewardList');
         list.innerHTML = '';
         rewards.forEach(item => {
@@ -176,30 +161,22 @@
 
     function redeem(name, cost) {
         if (confirm(`確定兌換「${name}」？將扣除 ${cost} 個印花。`)) {
-            // 播放音效
-            let sound = new Audio('https://files.catbox.moe/5n4y5p.mp3');
-            sound.play().catch(e => console.log("音訊播放失敗"));
-            
-            // 噴公仔特效
+            new Audio('https://files.catbox.moe/5n4y5p.mp3').play().catch(() => {});
             const scalar = 2;
             const b = confetti.shapeFromText({ text: '🍌', scalar });
             const h = confetti.shapeFromText({ text: '💛', scalar });
             const u = confetti.shapeFromText({ text: '🐥', scalar });
             confetti({ shapes: [b, h, u], particleCount: 50, spread: 70, origin: { y: 0.6 }, scalar });
 
-            // 扣除印花並更新畫面
             stamps -= cost;
             renderStamps();
             renderRewards();
-            localStorage.setItem('stamps', stamps); // 儲存印花數量
-            
-            // 彈出成功句子
             alert(`兌換成功！🎉\n記得影低搵蕉蕉領取：${name}`);
         }
     }
 
     function toggleModal(show) { document.getElementById('rewardModal').style.display = show ? 'flex' : 'none'; }
-    init(); 
+    init();
 </script>
 </body>
 </html>
