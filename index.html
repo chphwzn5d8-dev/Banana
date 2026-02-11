@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>❤️ 蕉牌專屬印花任務</title>
+    <title>🐥耀耀專屬印花卡</title>
     <style>
         * { box-sizing: border-box; }
         html, body { 
@@ -56,7 +56,7 @@
 <body>
 
 <div class="card">
-    <h1>❤️ 蕉牌印花卡</h1>
+    <h1>🐥耀耀專屬印花卡</h1>
     <div id="currentDate" style="font-size: 12px; color: #999; margin-bottom: 10px;"></div>
     <div class="score-info">目前擁有印花：<span id="stampCount">0</span> / 20</div>
     <div class="stamp-grid" id="stampGrid"></div>
@@ -80,13 +80,13 @@
     const stampImg = "https://nagano-market.jp/cdn/shop/files/gifani_guide_thanx_250x.gif?v=3654521447782237687";
     
     const rewards = [
-        { name: "蕉牌哈哈哈", cost: 1, desc: "聽店主講笑話" },
-        { name: "蕉牌運動日", cost: 3, desc: "陪店主做運動" },
-        { name: "蕉牌按摩", cost: 5, desc: "店主親自按摩" },
-        { name: "蕉牌小食", cost: 5, desc: "驚喜小食一份" },
-        { name: "蕉牌深層按摩", cost: 10, desc: "豪華放鬆按摩" },
-        { name: "蕉牌神神秘秘", cost: 15, desc: "驚喜大獎" },
-        { name: "蕉牌無敵日", cost: 20, desc: "今日聽晒你話" }
+        { name: "蕉牌哈哈哈", cost: 1, desc: "用一個印花換一個笑容" },
+        { name: "蕉牌運動日", cost: 3, desc: "用三個印花變出運動蕉蕉" },
+        { name: "蕉牌按摩", cost: 5, desc: "用五個印花就享受到短暫溫柔" },
+        { name: "蕉牌小食", cost: 5, desc: "用五個印花就食到蕉大廚料理" },
+        { name: "蕉牌深層按摩", cost: 10, desc: "用十個印花香噴噴按摩" },
+        { name: "蕉牌神神秘秘", cost: 15, desc: "用十五個印花感受餘興未盡" },
+        { name: "蕉牌無敵日", cost: 20, desc: "用二十個印花擁有聽話的蕉" }
     ];
 
     let stamps = parseInt(localStorage.getItem('stamps')) || 0;
