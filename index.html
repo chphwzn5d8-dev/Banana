@@ -61,7 +61,7 @@
     <div id="currentDate" style="font-size: 12px; color: #999; margin-bottom: 10px;"></div>
     <div class="score-info">目前擁有印花：<span id="stampCount">0</span> / 20</div>
     <div class="stamp-grid" id="stampGrid"></div>
-<div class="mission-box" id="missionText">
+    <div class="mission-box" id="missionText">
         <strong>儲印花方法：</strong>
         點擊「領取印花」寫下一件事。藍毛毛會幫你記錄我們的回憶喔！
     </div>
@@ -71,8 +71,6 @@
     </div>
 </div>
 
-
-    
 <div class="modal" id="rewardModal">
     <div class="modal-content">
         <h3 style="margin: 0 0 15px 0; color: #ff6b6b;">✨ 蕉牌獎勵清單</h3>
@@ -84,16 +82,30 @@
 <script>
     const googleFormUrl = "https://forms.gle/rC1UqySGsSZdCQPK6"; 
     const stampImg = "https://nagano-market.jp/cdn/shop/files/gifani_guide_thanx_250x.gif?v=3654521447782237687";
-        const rewards = [
-        { name: "蕉牌哈哈哈", cost: 1, desc: "聽店主講笑話" },
-        { name: "蕉牌運動日", cost: 3, desc: "陪店主做運動" },
-        { name: "蕉牌按摩", cost: 5, desc: "店主親自按摩" },
-        { name: "蕉牌小食", cost: 5, desc: "驚喜小食一份" },
-        { name: "蕉牌深層按摩", cost: 10, desc: "豪華放鬆按摩" },
-        { name: "蕉牌神神秘秘", cost: 15, desc: "神祕獎勵揭曉" },
-        { name: "蕉牌無敵日", cost: 20, desc: "今日聽晒你話" }
-    ];
+    
+    // 預載音效 (更換穩定連結)
+    const audioYah = new Audio('https://raw.githubusercontent.com/chphwzn5d8-dev/Banana/main/yah.mp3'); // 建議將mp3放入GitHub
+    const audioUra = new Audio('https://raw.githubusercontent.com/chphwzn5d8-dev/Banana/main/ura.mp3'); 
 
+    // 如果你還沒上傳 mp3 到 GitHub，暫時沿用備用網址，但加上錯誤處理
+    const playYah = () => {
+        let sound = new Audio('https://files.catbox.moe/p9o7d4.mp3');
+        sound.play().catch(e => console.log("音訊播放失敗，可能需要先點擊頁面"));
+    };
+    const playUra = () => {
+        let sound = new Audio('https://files.catbox.moe/5n4y5p.mp3');
+        sound.play().catch(e => console.log("音訊播放失敗"));
+    };
+
+    const rewards = [
+        { name: "蕉牌哈哈哈", cost: 1, desc: "消耗 1 枚印花" },
+        { name: "蕉牌運動日", cost: 3, desc: "消耗 3 枚印花" },
+        { name: "蕉牌按摩", cost: 5, desc: "消耗 5 枚印花" },
+        { name: "蕉牌小食", cost: 5, desc: "消耗 5 枚印花" },
+        { name: "蕉牌深層按摩", cost: 10, desc: "消耗 10 枚印花" },
+        { name: "蕉牌神神秘秘", cost: 15, desc: "消耗 15 枚印花" },
+        { name: "蕉牌無敵日", cost: 20, desc: "消耗 20 枚印花" }
+    ];
 
     let stamps = parseInt(localStorage.getItem('stamps')) || 0;
     let hasOpenedForm = false;
@@ -115,13 +127,12 @@
         }
         document.getElementById('stampCount').innerText = stamps;
         
-                const missionBox = document.getElementById('missionText');
+        const missionBox = document.getElementById('missionText');
         if (stamps >= 20) {
             missionBox.innerHTML = `<strong>太棒了！</strong> 印花已經滿晒喇，快啲去兌換大獎啦！`;
         } else {
             missionBox.innerHTML = `<strong>儲印花方法：</strong> 點擊「領取印花」寫下一件事。藍毛毛會幫你記錄我們的回憶喔！`;
         }
-
         localStorage.setItem('stamps', stamps);
     }
 
@@ -135,8 +146,7 @@
             btn.innerHTML = "✅ 係咪填好左，自嘲熊努力幫你蓋緊印花";
             btn.style.background = "#4CAF50"; 
         } else {
-            // 🎵 烏薩奇 YAH!! 聲
-            new Audio('https://files.catbox.moe/p9o7d4.mp3').play();
+            playYah(); // 播放 YAH!!
             stamps++;
             renderStamps();
             renderRewards();
@@ -147,7 +157,7 @@
         }
     }
 
-        function renderRewards() {
+    function renderRewards() {
         const list = document.getElementById('rewardList');
         list.innerHTML = '';
         rewards.forEach(item => {
@@ -166,10 +176,9 @@
 
     function redeem(name, cost) {
         if (confirm(`確定兌換「${name}」？將扣除 ${cost} 個印花。`)) {
-            // 🎵 烏薩奇 URAAA!! 聲
-            new Audio('https://files.catbox.moe/5n4y5p.mp3').play();
+            playUra(); // 播放 URAAA!!
             
-            // 🍌 噴出公仔！
+            // 噴公仔特效
             const scalar = 2;
             const b = confetti.shapeFromText({ text: '🍌', scalar });
             const h = confetti.shapeFromText({ text: '💛', scalar });
@@ -184,9 +193,7 @@
     }
 
     function toggleModal(show) { document.getElementById('rewardModal').style.display = show ? 'flex' : 'none'; }
-    init(); 
+    init();
 </script>
 </body>
 </html>
-
-
