@@ -115,12 +115,13 @@
         }
         document.getElementById('stampCount').innerText = stamps;
         
-        const missionBox = document.getElementById('missionText');
-        if (stamps < 20) {
-            missionBox.innerHTML = `<strong>加油！</strong> 距離換領大獎仲差 <strong>${20 - stamps}</strong> 個印花！撳「領取」去填任務。`;
-        } else {
+                const missionBox = document.getElementById('missionText');
+        if (stamps >= 20) {
             missionBox.innerHTML = `<strong>太棒了！</strong> 印花已經滿晒喇，快啲去兌換大獎啦！`;
+        } else {
+            missionBox.innerHTML = `<strong>儲印花方法：</strong> 點擊「領取印花」寫下一件事。藍毛毛會幫你記錄我們的回憶喔！`;
         }
+
         localStorage.setItem('stamps', stamps);
     }
 
