@@ -132,6 +132,18 @@ let hasOpenedForm = false; // 用嚟記錄佢係咪開咗 Google Form
         btn.style.background = "#4CAF50"; 
     } else {
         // --- 流程 B：佢已經開咗 Form，依家係第二次撳 ---
+
+            } else {
+        // 第二步：正式加印花
+        
+        // 🎵 加入呢兩行就可以有聲喇！
+        var audio = new Audio('https://www.soundjay.com/buttons/sounds/button-30.mp3'); 
+        audio.play();
+
+        stamps++;
+        renderStamps();
+        // ...
+
         stamps++;
         renderStamps();
         renderRewards();
