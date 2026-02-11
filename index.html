@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🐥耀耀專屬印花卡</title>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <title>❤️ 蕉牌專屬印花任務</title>
     <style>
         * { box-sizing: border-box; }
         html, body { 
@@ -57,14 +56,11 @@
 <body>
 
 <div class="card">
-    <h1>🐥 耀耀專屬印花卡</h1>
+    <h1>❤️ 蕉牌印花卡</h1>
     <div id="currentDate" style="font-size: 12px; color: #999; margin-bottom: 10px;"></div>
     <div class="score-info">目前擁有印花：<span id="stampCount">0</span> / 20</div>
     <div class="stamp-grid" id="stampGrid"></div>
-    <div class="mission-box" id="missionText">
-        <strong>儲印花方法：</strong>
-        點擊「領取印花」寫下一件事。藍毛毛會幫你記錄我們的回憶喔！
-    </div>
+    <div class="mission-box" id="missionText"></div>
     <div class="btn-group">
         <button class="btn btn-add" onclick="addStamp()">＋ 領取一個印花</button>
         <button class="btn btn-view" onclick="toggleModal(true)">🎁 兌換獎勵</button>
@@ -84,13 +80,13 @@
     const stampImg = "https://nagano-market.jp/cdn/shop/files/gifani_guide_thanx_250x.gif?v=3654521447782237687";
     
     const rewards = [
-        { name: "蕉牌哈哈哈", cost: 1 },
-        { name: "蕉牌運動日", cost: 3 },
-        { name: "蕉牌按摩", cost: 5 },
-        { name: "蕉牌小食", cost: 5 },
-        { name: "蕉牌深層按摩", cost: 10 },
-        { name: "蕉牌神神秘秘", cost: 15 },
-        { name: "蕉牌無敵日", cost: 20 }
+        { name: "蕉牌哈哈哈", cost: 1, desc: "聽店主講笑話" },
+        { name: "蕉牌運動日", cost: 3, desc: "陪店主做運動" },
+        { name: "蕉牌按摩", cost: 5, desc: "店主親自按摩" },
+        { name: "蕉牌小食", cost: 5, desc: "驚喜小食一份" },
+        { name: "蕉牌深層按摩", cost: 10, desc: "豪華放鬆按摩" },
+        { name: "蕉牌神神秘秘", cost: 15, desc: "驚喜大獎" },
+        { name: "蕉牌無敵日", cost: 20, desc: "今日聽晒你話" }
     ];
 
     let stamps = parseInt(localStorage.getItem('stamps')) || 0;
@@ -132,11 +128,10 @@
             btn.innerHTML = "✅ 係咪填好左，自嘲熊努力幫你蓋緊印花";
             btn.style.background = "#4CAF50"; 
         } else {
-            new Audio('https://files.catbox.moe/p9o7d4.mp3').play().catch(() => {});
             stamps++;
             renderStamps();
             renderRewards();
-            alert("蓋咗印花💛下次再嚟記錄啦！");
+            alert("蓋左印花💛下次再嚟記錄啦！");
             hasOpenedForm = false;
             btn.innerHTML = "＋ 領取一個印花";
             btn.style.background = "#ff6b6b";
@@ -152,7 +147,7 @@
             div.innerHTML = `
                 <div style="text-align:left">
                     <div style="font-weight:bold; font-size:15px;">${item.name}</div>
-                    <div style="font-size:12px; color:#ff6b6b">消耗 ${item.cost} 枚印花</div>
+                    <div style="font-size:12px; color:#888">${item.desc} (消耗 ${item.cost} 枚)</div>
                 </div>
                 <button class="redeem-btn" ${stamps < item.cost ? 'disabled style="background:#ddd"' : ''} onclick="redeem('${item.name}', ${item.cost})">兌換</button>
             `;
@@ -162,18 +157,12 @@
 
     function redeem(name, cost) {
         if (confirm(`確定兌換「${name}」？將扣除 ${cost} 個印花。`)) {
-            new Audio('https://files.catbox.moe/5n4y5p.mp3').play().catch(() => {});
-            const scalar = 2;
-            const b = confetti.shapeFromText({ text: '🍌', scalar });
-            const h = confetti.shapeFromText({ text: '💛', scalar });
-            const u = confetti.shapeFromText({ text: '🐥', scalar });
-            confetti({ shapes: [b, h, u], particleCount: 50, spread: 70, origin: { y: 0.6 }, scalar });
-
             stamps -= cost;
             renderStamps();
             renderRewards();
             localStorage.setItem('stamps', stamps);
-            alert(`兌換成功！🎉\n記得影低搵蕉蕉領取：${name}`);
+            // 完美還原你要求的那句說話
+            alert(`兌換成功！!!記得影低搵蕉蕉領取：${name}`);
         }
     }
 
