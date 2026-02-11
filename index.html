@@ -142,6 +142,47 @@
         }
     }
 
+        function renderStamps() {
+        const grid = document.getElementById('stampGrid');
+        grid.innerHTML = '';
+        for (let i = 1; i <= 20; i++) {
+            const slot = document.createElement('div');
+            slot.className = i <= stamps ? 'stamp-slot active' : 'stamp-slot';
+            slot.innerHTML = i <= stamps ? `<img src="${stampImg}">` : i;
+            grid.appendChild(slot);
+        }
+        document.getElementById('stampCount').innerText = stamps;
+        
+        const missionBox = document.getElementById('missionText');
+        if (stamps >= 20) {
+            missionBox.innerHTML = `<strong>太棒了！</strong> 印花已經滿晒喇，快啲去兌換大獎啦！`;
+        } else {
+            missionBox.innerHTML = `<strong>儲印花方法：</strong> 點擊「領取印花」寫下一件事。藍毛毛會幫你記錄我們的回憶喔！`;
+        }
+        localStorage.setItem('stamps', stamps);
+    }
+
+    function addStamp() {
+        if (stamps >= 20) { alert("印花已經滿咗啦！"); return; }
+        const btn = document.querySelector('.btn-add');
+        if (!hasOpenedForm) {
+            alert("耀耀～依家幫你打開 Google Form 寫低我哋嘅回憶，一陣自嘲熊就會幫你印上印花❤️～");
+            window.open(googleFormUrl, '_blank');
+            hasOpenedForm = true;
+            btn.innerHTML = "✅ 係咪填好左，自嘲熊努力幫你蓋緊印花";
+            btn.style.background = "#4CAF50"; 
+        } else {
+            new Audio('https://files.catbox.moe/p9o7d4.mp3').play().catch(() => {});
+            stamps++;
+            renderStamps();
+            renderRewards();
+            alert("蓋咗印花💛下次再嚟記錄啦！");
+            hasOpenedForm = false;
+            btn.innerHTML = "＋ 領取一個印花";
+            btn.style.background = "#ff6b6b";
+        }
+    }
+
     function renderRewards() {
         const list = document.getElementById('rewardList');
         list.innerHTML = '';
@@ -171,9 +212,11 @@
             stamps -= cost;
             renderStamps();
             renderRewards();
-    alert(`兌換成功！🎉\n記得影低搵蕉蕉領取：${name}`);
-       }
+            localStorage.setItem('stamps', stamps);
+            alert(`兌換成功！🎉\n記得影低搵蕉蕉領取：${name}`);
+        }
     }
+
     function toggleModal(show) { document.getElementById('rewardModal').style.display = show ? 'flex' : 'none'; }
     init();
 </script>
