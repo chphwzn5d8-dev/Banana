@@ -209,7 +209,7 @@
             const u = confetti.shapeFromText({ text: '🐥', scalar });
             confetti({ shapes: [b, h, u], particleCount: 50, spread: 70, origin: { y: 0.6 }, scalar });
 
-            stamps -= cost;
+                        stamps -= cost;
             renderStamps();
             renderRewards();
             localStorage.setItem('stamps', stamps);
@@ -217,7 +217,11 @@
         }
     }
 
-    function toggleModal(show) { document.getElementById('rewardModal').style.display = show ? 'flex' : 'none'; }
+    function toggleModal(show) { 
+        document.getElementById('rewardModal').style.display = show ? 'flex' : 'none'; 
+    }
+    
+    // 初始化網頁
     init();
 </script>
 </body>
