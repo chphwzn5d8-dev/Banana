@@ -133,12 +133,14 @@ let hasOpenedForm = false; // 用嚟記錄佢係咪開咗 Google Form
     } else {
         // --- 流程 B：佢已經開咗 Form，依家係第二次撳 ---
 
-            } else {
-        // 第二步：正式加印花
-        
-        // 🎵 加入呢兩行就可以有聲喇！
-        var audio = new Audio('https://www.soundjay.com/buttons/sounds/button-30.mp3'); 
-        audio.play();
+    
+        } else {
+            // 第二步：正式加印花
+            
+            // 🎵 插入烏薩奇 YAH!! 聲
+            var audio = new Audio('https://files.catbox.moe/p9o7d4.mp3'); 
+            audio.play();
+
 
         stamps++;
         renderStamps();
@@ -178,7 +180,14 @@ let hasOpenedForm = false; // 用嚟記錄佢係咪開咗 Google Form
     }
 
     function redeem(name, cost) {
-        if (confirm(`確定兌換「${name}」？將扣除 ${cost} 個印花。`)) {
+        if (confirm(`確定兌換「${name}」？將扣除 ${cost} 個印花。`)) 
+        
+    }
+        
+            // 🎵 插入烏薩奇 URAAA!! 聲
+            var audioRedeem = new Audio('https://files.catbox.moe/5n4y5p.mp3');
+            audioRedeem.play();
+
             stamps -= cost;
             renderStamps();
             renderRewards();
