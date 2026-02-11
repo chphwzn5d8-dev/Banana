@@ -1,11 +1,68 @@
-    
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>❤️ 蕉牌專屬印花任務</title>
+    <style>
+        * { box-sizing: border-box; }
+        html, body { 
+            width: 100%; height: 100%; margin: 0; padding: 0; 
+            background-color: #fff5f5; display: flex; 
+            justify-content: center; align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        .card { 
+            background: white; padding: 20px; border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; 
+            max-width: 350px; width: 90%; border: 3px solid #ffb7b7; 
+        }
+        h1 { color: #ff6b6b; font-size: 22px; margin: 10px 0; }
+        .score-info { font-size: 18px; font-weight: bold; color: #ff6b6b; margin-bottom: 15px; }
+        .stamp-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 20px; }
+        .stamp-slot { 
+            aspect-ratio: 1; background: #f9f9f9; border-radius: 10px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 14px; color: #ddd; border: 2px dashed #eee; font-weight: bold; overflow: hidden;
+        }
+        .stamp-slot.active { background: #ffe3e3; border: 2px solid #ff6b6b; color: #ff6b6b; }
+        .stamp-slot img { width: 100%; height: 100%; object-fit: cover; }
+        .mission-box { 
+            background: #fff0f0; padding: 12px; border-radius: 12px; 
+            font-size: 13px; text-align: left; border-left: 4px solid #ff6b6b; margin-bottom: 15px; 
+        }
+        .btn-group { display: flex; gap: 10px; }
+        .btn { 
+            padding: 12px; border: none; border-radius: 25px; 
+            font-size: 14px; font-weight: bold; cursor: pointer; flex: 1; 
+        }
+        .btn-add { background: #ff6b6b; color: white; box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3); }
+        .btn-view { background: #ffb7c5; color: white; }
+        .modal { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: flex-end; 
+        }
+        .modal-content { 
+            background: white; width: 100%; max-width: 400px; 
+            border-radius: 25px 25px 0 0; padding: 20px; 
+            animation: slideUp 0.3s; max-height: 70vh; overflow-y: auto; 
+        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .reward-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed #eee; }
+        .redeem-btn { background: #ff6b6b; color: white; border: none; padding: 6px 14px; border-radius: 15px; font-size: 12px; }
+        .close-btn { background: #eee; width: 100%; margin-top: 15px; padding: 10px; border: none; border-radius: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>❤️ 蕉牌印花卡</h1>
+    <div id="currentDate" style="font-size: 12px; color: #999; margin-bottom: 10px;"></div>
+    <div class="score-info">目前擁有印花：<span id="stampCount">0</span> / 20</div>
     <div class="stamp-grid" id="stampGrid"></div>
-
     <div class="mission-box">
-        <strong>儲印花方法：</strong>
-        點擊「領取印花」寫下一件事。藍毛毛會幫你記錄我們的回憶喔！
+        <strong>儲印花方法：</strong> 點擊「領取印花」寫下一件事。藍毛毛會幫你記錄我們的回憶喔！
     </div>
-
     <div class="btn-group">
         <button class="btn btn-add" onclick="addStamp()">＋ 領取一個印花</button>
         <button class="btn btn-view" onclick="toggleModal(true)">🎁 兌換獎勵</button>
@@ -20,54 +77,58 @@
     </div>
 </div>
 
-
 <script>
-    // 配置區域
- const googleFormUrl = "https://forms.gle/rC1UqySGsSZdCQPK6"; 
-const stampImg = "https://nagano-market.jp/cdn/shop/files/gifani_guide_thanx_250x.gif?v=3654521447782237687";
+    const googleFormUrl = "https://forms.gle/rC1UqySGsSZdCQPK6"; 
+    const stampImg = "https://nagano-market.jp/cdn/shop/files/gifani_guide_thanx_250x.gif?v=3654521447782237687";
+    const rewards = [
+        { name: "蕉牌哈哈哈", cost: 1 },
+        { name: "蕉牌運動日", cost: 3 },
+        { name: "蕉牌按摩", cost: 5 },
+        { name: "蕉牌小食", cost: 5 },
+        { name: "蕉牌深層按摩", cost: 10 },
+        { name: "蕉牌神神秘秘", cost: 15 },
+        { name: "蕉牌無敵日", cost: 20 }
+    ];
 
-  }
+    let stamps = parseInt(localStorage.getItem('stamps')) || 0;
 
-function renderRewards() {
-    const list = document.getElementById('rewardList');
-    if(!list) return;
-    list.innerHTML = '';
-    rewards.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'reward-item';
-        div.innerHTML = `
-            <div style="text-align:left">
-                <div style="font-weight:bold">${item.name}</div>
-                <div style="font-size:11px; color:#888">消耗 ${item.cost} 個印花</div>
-            </div>
-            <button class="redeem-btn" ${stamps < item.cost ? 'disabled' : ''} onclick="redeem('${item.name}', ${item.cost})">
-                ${stamps < item.cost ? '不夠' : '兌換'}
-            </button>
-        `;
-        list.appendChild(div);
-    });
-}
-
-function redeem(name, cost) {
-    if (confirm(`確定兌換「${name}」？將扣除 ${cost} 個印花。`)) {
-        stamps -= cost;
+    function init() {
+        document.getElementById('currentDate').innerText = "今天是：" + new Date().toLocaleDateString();
         renderStamps();
         renderRewards();
-        alert(`兌換成功！!!記得影低搵蕉蕉領取：${name}`);
     }
-}
 
-function toggleModal(show) { 
-    document.getElementById('rewardModal').style.display = show ? 'flex' : 'none'; 
-}
+    function renderStamps() {
+        const grid = document.getElementById('stampGrid');
+        if(!grid) return;
+        grid.innerHTML = '';
+        for (let i = 1; i <= 20; i++) {
+            const slot = document.createElement('div');
+            slot.className = i <= stamps ? 'stamp-slot active' : 'stamp-slot';
+            slot.innerHTML = i <= stamps ? `<img src="${stampImg}">` : i;
+            grid.appendChild(slot);
+        }
+        document.getElementById('stampCount').innerText = stamps;
+        localStorage.setItem('stamps', stamps);
+    }
 
-// 初始化
-document.getElementById('currentDate').innerText = "今天是：" + new Date().toLocaleDateString();
-renderStamps();
-renderRewards();
+    function addStamp() {
+        if (stamps < 20) {
+            stamps++;
+            renderStamps();
+            renderRewards();
+            setTimeout(() => {
+                alert("耀耀～依家幫你打開 Google Form 寫低我哋嘅回憶，一陣自嘲熊就會幫你印上印花❤️");
+                window.location.href = googleFormUrl; 
+            }, 100);
+        } else {
+            alert("印花已經滿咗啦！快啲搵蕉換獎勵啦～");
+        }
+    }
 
     function renderRewards() {
         const list = document.getElementById('rewardList');
+        if(!list) return;
         list.innerHTML = '';
         rewards.forEach(item => {
             const div = document.createElement('div');
@@ -100,5 +161,3 @@ renderRewards();
 </script>
 </body>
 </html>
-
-  
