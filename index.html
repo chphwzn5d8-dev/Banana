@@ -154,7 +154,7 @@
             div.className = 'reward-item';
             div.innerHTML = `
                 <div style="text-align:left">
-                    <div style="font-weight:bold">${item.name}
+                    <div style="font-weight:bold">${item.name}</div>
                     <div style="font-size:11px; color:#888">消耗 ${item.cost} 枚印花</div>
 
                 </div>
@@ -179,9 +179,8 @@
             stamps -= cost;
             renderStamps();
             renderRewards();
-            alert(`兌換成功！🎉\n記得影低搵蕉蕉領取：${name}`
-        }
-    }
+            alert(`兌換成功！🎉\n記得影低搵蕉蕉領取：${name});
+        }}
 
     function toggleModal(show) { document.getElementById('rewardModal').style.display = show ? 'flex' : 'none'; }
 init(); // 確保這行在最後，負責啟動整個網頁
