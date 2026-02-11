@@ -1,0 +1,104 @@
+    
+    <div class="stamp-grid" id="stampGrid"></div>
+
+    <div class="mission-box">
+        <strong>儲印花方法：</strong>
+        點擊「領取印花」寫下一件事。藍毛毛會幫你記錄我們的回憶喔！
+    </div>
+
+    <div class="btn-group">
+        <button class="btn btn-add" onclick="addStamp()">＋ 領取一個印花</button>
+        <button class="btn btn-view" onclick="toggleModal(true)">🎁 兌換獎勵</button>
+    </div>
+</div>
+
+<div class="modal" id="rewardModal">
+    <div class="modal-content">
+        <h3 style="margin: 0 0 15px 0; color: #ff6b6b;">✨ 蕉牌獎勵清單</h3>
+        <div id="rewardList"></div>
+        <button class="close-btn" onclick="toggleModal(false)">返回</button>
+    </div>
+</div>
+
+
+<script>
+    // 配置區域
+ const googleFormUrl = "https://forms.gle/rC1UqySGsSZdCQPK6"; 
+const stampImg = "https://nagano-market.jp/cdn/shop/files/gifani_guide_thanx_250x.gif?v=3654521447782237687";
+
+  }
+
+function renderRewards() {
+    const list = document.getElementById('rewardList');
+    if(!list) return;
+    list.innerHTML = '';
+    rewards.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'reward-item';
+        div.innerHTML = `
+            <div style="text-align:left">
+                <div style="font-weight:bold">${item.name}</div>
+                <div style="font-size:11px; color:#888">消耗 ${item.cost} 個印花</div>
+            </div>
+            <button class="redeem-btn" ${stamps < item.cost ? 'disabled' : ''} onclick="redeem('${item.name}', ${item.cost})">
+                ${stamps < item.cost ? '不夠' : '兌換'}
+            </button>
+        `;
+        list.appendChild(div);
+    });
+}
+
+function redeem(name, cost) {
+    if (confirm(`確定兌換「${name}」？將扣除 ${cost} 個印花。`)) {
+        stamps -= cost;
+        renderStamps();
+        renderRewards();
+        alert(`兌換成功！!!記得影低搵蕉蕉領取：${name}`);
+    }
+}
+
+function toggleModal(show) { 
+    document.getElementById('rewardModal').style.display = show ? 'flex' : 'none'; 
+}
+
+// 初始化
+document.getElementById('currentDate').innerText = "今天是：" + new Date().toLocaleDateString();
+renderStamps();
+renderRewards();
+
+    function renderRewards() {
+        const list = document.getElementById('rewardList');
+        list.innerHTML = '';
+        rewards.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'reward-item';
+            div.innerHTML = `
+                <div style="text-align:left">
+                    <div style="font-weight:bold">${item.name}</div>
+                    <div style="font-size:11px; color:#888">消耗 ${item.cost} 個印花</div>
+                </div>
+                <button class="redeem-btn" ${stamps < item.cost ? 'disabled' : ''} onclick="redeem('${item.name}', ${item.cost})">
+                    ${stamps < item.cost ? '不夠' : '兌換'}
+                </button>
+            `;
+            list.appendChild(div);
+        });
+    }
+
+    function redeem(name, cost) {
+        if (confirm(`確定兌換「${name}」？將扣除 ${cost} 個印花。`)) {
+            stamps -= cost;
+            renderStamps();
+            renderRewards();
+            alert(`兌換成功！!!記得影低搵蕉蕉領取：${name}`);
+        }
+    }
+
+    function toggleModal(show) { document.getElementById('rewardModal').style.display = show ? 'flex' : 'none'; }
+    
+    init();
+</script>
+</body>
+</html>
+
+  
